@@ -66,7 +66,7 @@ class client : public std::enable_shared_from_this<client> {
                         do_read();
                     }
                     else {
-                        cerr << ec << endl;
+                        cerr << "connect error" << endl;
                         socket_.close();
                     }
                 }
@@ -108,6 +108,9 @@ class client : public std::enable_shared_from_this<client> {
                 [this, self](boost::system::error_code ec, long unsigned int length) {
                     if (!ec) {
                         do_read();
+                    }
+                    else {
+                        cerr << "write error" << endl;
                     }
                 }
             );
@@ -257,6 +260,7 @@ int main(int argc, char* argv[]) {
     try {
         do_getenv();
         do_parseQueryString();
+        printHttpConsole();
         boost::asio::io_context io_context;
 
         for (long unsigned int i = 0; i < QUERYINFO.size(); i++) {

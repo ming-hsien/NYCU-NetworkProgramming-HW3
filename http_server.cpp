@@ -101,7 +101,7 @@ class session : public enable_shared_from_this<session> {
         void do_dup2(int sock) {
             dup2(sock, 0);
             dup2(sock, 1);
-            // dup2(sock, 2);
+            dup2(sock, 2);
         }
 
         void do_clean() {

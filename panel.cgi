@@ -6,7 +6,7 @@ N_SERVERS = 5
 FORM_METHOD = 'GET'
 FORM_ACTION = 'console.cgi'
 
-TEST_CASE_DIR = 'extra_files/test_case'
+# TEST_CASE_DIR = 'extra_files/test_case'
 try:
     test_cases = sorted(os.listdir(TEST_CASE_DIR))
 except:
