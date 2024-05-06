@@ -6,6 +6,7 @@
 #include <string>
 #include <cstring>
 #include <sstream>
+#include <map>
 #include <sys/wait.h>
 #include <boost/asio.hpp>
 #include <boost/algorithm/string.hpp>
@@ -33,6 +34,7 @@ class client : public std::enable_shared_from_this<client> {
                 do_resolve();
             }
             else {
+                cerr << "file open error" << endl;
                 socket_.close();
             }
         }
@@ -48,6 +50,7 @@ class client : public std::enable_shared_from_this<client> {
                         do_connect(resolve_ip);
                     }
                     else {
+                        cerr << "resolve error" << endl;
                         socket_.close();
                     }
                 }
@@ -58,11 +61,12 @@ class client : public std::enable_shared_from_this<client> {
             auto self(shared_from_this());
             boost::asio::async_connect(
                 socket_, resolve_ip,
-                [this, self](boost::system::error_code ec, const boost::asio::ip::tcp::endpoint& endpoint) {
+                [this, self](boost::system::error_code ec, const tcp::endpoint& endpoint) {
                     if (!ec) {
                         do_read();
                     }
                     else {
+                        cerr << ec << endl;
                         socket_.close();
                     }
                 }
@@ -86,6 +90,7 @@ class client : public std::enable_shared_from_this<client> {
                             }
                         }
                         else {
+                            cerr << "read error" << endl;
                             socket_.close();
                         }
                     }
