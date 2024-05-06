@@ -78,21 +78,20 @@ class client : public std::enable_shared_from_this<client> {
             socket_.async_read_some(boost::asio::buffer(data_, max_length),
                 [this, self](boost::system::error_code ec, size_t length) {
                     if (!ec) {
-                        if (length) {
-                            data_[length] = '\0';
-                            string input = replace_escape(string(data_));
-                            output_shell(input);
-                            if (input.find("%") != string::npos) {
-                                do_writeCmd();
-                            }
-                            else {
-                                do_read();
-                            }
+                        data_[length] = '\0';
+                        string input = replace_escape(string(data_));
+                        output_shell(input);
+                        memset(data_, '\0', max_length);
+                        if (input.find("%") != string::npos) {
+                            do_writeCmd();
                         }
                         else {
-                            cerr << "read error" << endl;
-                            socket_.close();
+                            do_read();
                         }
+                    }
+                    else {
+                        cerr << "read error" << endl;
+                        socket_.close();
                     }
                 }
             );
@@ -103,9 +102,9 @@ class client : public std::enable_shared_from_this<client> {
             string Cmd = "";
             getline(infile, Cmd);
             Cmd += '\n';
-            output_command(Cmd);
+            output_command(replace_escape(Cmd));
             boost::asio::async_write(socket_, boost::asio::buffer(Cmd, Cmd.size()),
-                [this, self](boost::system::error_code ec, long unsigned int length) {
+                [this, self](boost::system::error_code ec, unsigned long int length) {
                     if (!ec) {
                         do_read();
                     }
@@ -125,15 +124,14 @@ class client : public std::enable_shared_from_this<client> {
         }
 
         string replace_escape(string str){
-            string buffer = str;
-            boost::algorithm::replace_all(buffer, "&", "&amp;");
-            boost::algorithm::replace_all(buffer, "\r", "");
-            boost::algorithm::replace_all(buffer, "\n", "&NewLine;");
-            boost::algorithm::replace_all(buffer, "\'", "&apos;");
-            boost::algorithm::replace_all(buffer, "\"", "&quot;");
-            boost::algorithm::replace_all(buffer, "<", "&lt;");
-            boost::algorithm::replace_all(buffer, ">", "&gt;");
-            return buffer;
+            boost::algorithm::replace_all(str, "&", "&amp;");
+            boost::algorithm::replace_all(str, "\r", "");
+            boost::algorithm::replace_all(str, "\n", "&NewLine;");
+            boost::algorithm::replace_all(str, "\'", "&apos;");
+            boost::algorithm::replace_all(str, "\"", "&quot;");
+            boost::algorithm::replace_all(str, "<", "&lt;");
+            boost::algorithm::replace_all(str, ">", "&gt;");
+            return str;
         }
 
         boost::asio::ip::tcp::resolver resolver;
@@ -213,17 +211,17 @@ void printHttpConsole() {
     "       href=\"https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678068-terminal-512.pn\"\n"
     "   />\n"
     "   <style>\n"
-    "       * {\n"
+    "       *{\n"
     "           font-family: 'Source Code Pro', monospace;\n"
     "           font-size: 1rem !important;\n"
     "       }\n"
-    "       body {\n"
+    "       body{\n"
     "           background-color: #212529;\n"
     "       }\n"
-    "       pre {\n"
+    "       pre{\n"
     "           color: #cccccc;\n"
     "       }\n"
-    "       b {\n"
+    "       b{\n"
     "           color: #01b468;\n"
     "       }\n"
     "   </style>\n"
