@@ -48,3 +48,10 @@ Thumbs.db
 *.mov
 *.wmv
 
+test
+test.cpp
+http_server
+console.cgi
+sample_console.cgi
+extra_files/boost_asio_example
+
