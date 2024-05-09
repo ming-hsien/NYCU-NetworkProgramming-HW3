@@ -54,4 +54,6 @@ http_server
 console.cgi
 sample_console.cgi
 extra_files/boost_asio_example
+cgi_server.exe
+.vscode/
 
