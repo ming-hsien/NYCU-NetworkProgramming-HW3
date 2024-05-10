@@ -10,9 +10,9 @@ part1: http_server.cpp console.cpp
 	$(CXX) console.cpp -o console.cgi $(CXX_INCLUDE_PARAMS) $(CXX_LIB_PARAMS) $(CXXFLAGS)
 
 part2: cgi_server.cpp
-	$(CXX) cgi_server.cpp -o cgi_server -lws2_32 -lwsock32 -std=c++14 -pthread
+	$(CXX) cgi_server.cpp -o cgi_server.exe -lws2_32 -lwsock32 -std=c++14 -pthread
 
 clean:
 	rm -f http_server
 	rm -f console.cgi
-	cgi_server
+	rm -r cgi_server.exe
