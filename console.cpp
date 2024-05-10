@@ -136,7 +136,7 @@ class client : public std::enable_shared_from_this<client> {
 
         boost::asio::ip::tcp::resolver resolver;
         boost::asio::ip::tcp::socket socket_;
-        enum { max_length = 1024 };
+        enum { max_length = 4096 };
         char data_[max_length];
         int id;
         ifstream infile;
